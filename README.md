@@ -3,7 +3,7 @@
 This is my first tkinter self-Project and you freely use it. <big style="color:green;">Contribute and make it better</big>
 
 all necessory module in requirements.txt
-install all mudule, run this commmand  - <b style="color:green;">" pip3 install -r requirements.txt'</b>
+install all mudule, run this commmand  - <b style="color:yello;">' pip3 install -r requirements.txt'</b>
 
 
 <h1>Module Use</h1>
