@@ -1,6 +1,6 @@
 # DRS-Project
 <h1>Third Umpire Decision Review System using Python</h1>
-This is my first tkinter self-Project and you freely use it. <big style="color:#1589F0;">Contribute and make it better</big>
+This is my first tkinter self-Project and you freely use it. <big>+ Contribute and make it better +</big>
 
 all necessory module in requirements.txt
 install all mudule, run this commmand  - <b style="color:#1589F0;">' pip3 install -r requirements.txt'</b>
