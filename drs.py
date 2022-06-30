@@ -2,31 +2,44 @@
 # import modules
 #import partial for passing argument in command in button
 import tkinter 
+from tkinter import  filedialog
 import PIL.Image, PIL.ImageTk
-import cv2
 from functools import partial
 import threading
 import time
+import cv2
 
 SET_HEIGHT = 480
-SET_HEIGHT2 = 600
 SET_WIDTH = 720
 delay = 1
 # video clip capture
-stream = cv2.VideoCapture('file/demo.mp4')
-# Button Action
-def button(Text, Command, fgColor, bgColor, xAxis, yAxis):
-    btn = tkinter.Button(
-                    window, text=Text,
-                    width=10, 
-                    command=Command, 
-                    cursor='hand2',
-                    font=('Times', 14, 'bold'), 
-                    fg= fgColor,
-                    bg= bgColor
-        )
-    # btn.pack(side=tkinter.LEFT)
-    btn.place(relx= xAxis, rely=yAxis)
+# Upload Your Video
+def uploadFile():
+    file = filedialog.askopenfilename(filetypes=[("Video", '.MP4'),("All file, '*.*")])
+    uploadVideo(file)
+    # want to change file
+    btn1.config(command=uploadFile)
+    
+# Demo video
+def demoVideo():
+    file = 'file/demo.mp4'
+    uploadVideo(file)
+    # want to restart
+    btn0.config(command=demoVideo)
+    
+
+def uploadVideo(filename):
+    global stream, photo2
+    stream = cv2.VideoCapture(f'{filename}')
+    # read frame of video, convert in image and exchange with home.png
+    _, video = stream.read()
+    videoFrame = cv2.resize(video, (SET_WIDTH, SET_HEIGHT))
+    photo2 = PIL.ImageTk.PhotoImage(image= PIL.Image.fromarray(videoFrame))
+    canvas.itemconfig(home_container, image = photo2)
+
+    # after click on demo all button enable
+    for btn in (btn2,btn3,btn4,btn5,btn6,btn7,btn8):
+        btn.config(state='normal')
 
 # see pending and decision image in canvas frame
 def frameView(item_frame):
@@ -39,11 +52,14 @@ def playAll():
     video = stream.get(cv2.CAP_PROP_POS_FRAMES)
     stream.set(cv2.CAP_PROP_POS_FRAMES, video)
     grabbed,video = stream.read()
-    frame = cv2.resize(video, (SET_WIDTH, SET_HEIGHT))
+        
     if grabbed:
+        frame = cv2.resize(video, (SET_WIDTH, SET_HEIGHT))
         frameView(frame)
-    window.after(delay, playAll)
-
+        window.after(delay, playAll)
+    # else:
+    #     stream.release()
+        
 # check, take decision fuction
 def play(speed):
     # merge video clip with speed 
@@ -61,7 +77,6 @@ def pending(decision):
     frameView(img_frame)
     
     time.sleep(1.5)
-
     if decision == 'Out':
         decision_img = 'file/out.png'
     else:
@@ -73,35 +88,56 @@ def out():
     thread = threading.Thread(target=pending, args=('Out',))
     thread.daemon = 1
     thread.start()
-    print('you are out')
+    for btn in (btn2,btn3,btn4,btn5,btn6,btn8):
+        btn.config(state='disabled')
 
 def not_out():
     thread = threading.Thread(target=pending, args=('Not Out',))
     thread.daemon = 1
     thread.start()
-    print('you are not out')
+    for btn in (btn2,btn3,btn4,btn5,btn6,btn7):
+        btn.config(state='disabled')
+         
+# Create GUI window ################################################################
+if __name__ == '__main__':
 
-# Create GUI window 
-window = tkinter.Tk()
-window.title("Decision Review Systme")
+    Font = ('Times', 14, 'bold')
+    window = tkinter.Tk()
+    window.title("Decision Review System")
+    photo = tkinter.PhotoImage(file='file/home.png')
+    # create canvas
+    canvas = tkinter.Canvas(window, height=SET_HEIGHT, width=SET_WIDTH)
+    home_container = canvas.create_image(0,0, image = photo, anchor= tkinter.NW)
+    canvas.pack()
 
-cv_image = cv2.cvtColor(cv2.imread('file/home.png'), cv2.COLOR_BGR2RGB)
+    # Create buttons into frames
+    # btn = button(text-label, button action, foreground Color, background Color,)
+    frame1 = tkinter.Frame(window)
+    frame1.pack(pady=10)
+    btn0 = tkinter.Button(frame1, text='Demo', command=demoVideo, font=Font, width=10, fg='black', bg='red')
+    btn0.pack(side=tkinter.LEFT)
+    btn1 = tkinter.Button(frame1, text='Upload',command=uploadFile, font=Font, width=10, fg='black', bg='red')
+    btn1.pack(side=tkinter.LEFT)
 
-# image processing using pilllow 
-photo = PIL.ImageTk.PhotoImage(image= PIL.Image.fromarray(cv_image))
-# create canvas
-canvas = tkinter.Canvas(window, height=SET_HEIGHT2, width=SET_WIDTH)
-canvas.create_image(0,0, image = photo, anchor= tkinter.NW)
-canvas.pack()
+    frame2 = tkinter.Frame(window)
+    frame2.pack(pady=10)
+    btn2 = tkinter.Button(frame2, text='<< Previous', command= partial(play, -25), font=Font, width=10, fg='orange', bg='black', state='disabled')
+    btn2.pack(side=tkinter.LEFT)
+    btn3 = tkinter.Button(frame2, text='< Previous', command= partial(play, -2), font=Font, width=10, fg='orange', bg='black', state= 'disabled')
+    btn3.pack(side=tkinter.LEFT)
+    btn4 = tkinter.Button(frame2, text='Forward >', command= partial(play, 2), font=Font, width=10, fg= 'lightgreen', bg='black', state='disabled')
+    btn4.pack(side=tkinter.LEFT)
+    btn5 = tkinter.Button(frame2, text= 'Forward >>', command= partial(play, 25),font=Font, width=10, fg= 'lightgreen', bg='black', state='disabled')
+    btn5.pack(side=tkinter.LEFT)
 
-# Create buttons
-# btn = button(text-label, button action, foreground Color, background Color, x offset = xAxis, y offset = yAxis)
-btn1 = button('<< Previous', partial(play, -25), 'orange', 'black', 0.18, 0.8)
-btn2 = button('< Previous',partial(play, -2), 'orange', 'black', 0.35, 0.8)
-btn3 = button('Next >', partial(play, 2), 'lightgreen', 'black', 0.51, 0.8)
-btn4 = button('Next >>',partial(play, 25), 'lightgreen', 'black', 0.68, 0.8)
-btn5 = button('Play',playAll,'blue', 'cyan', 0.3, 0.88)
-btn6 = button('Out',out, 'red', 'cyan', 0.45, 0.88)
-btn8 = button('Not Out',not_out, 'darkgreen', 'cyan', 0.6, 0.88)
+    frame3 = tkinter.Frame(window)
+    frame3.pack(pady=10)
+    btn6 = tkinter.Button(frame3, text= 'Play', command= playAll, font=Font, width=10, fg='blue', bg='cyan' , state='disabled')
+    btn6.pack(side=tkinter.LEFT)
+    btn7 = tkinter.Button(frame3, text= 'Out', command= out, font=Font, width=10, fg= 'red', bg= 'cyan', state='disabled')
+    btn7.pack(side=tkinter.LEFT)
+    btn8 = tkinter.Button(frame3, text= 'Not Out', command= not_out, font=Font, width=10, fg= 'darkgreen', bg= 'cyan', state='disabled')
+    btn8.pack(side=tkinter.LEFT)
 
-window.mainloop()
+    # bind one more event into button
+    window.mainloop()
