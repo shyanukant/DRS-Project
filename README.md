@@ -2,14 +2,48 @@
 <h1>Third Umpire Decision Review System using Python</h1>
 This is my first tkinter self-Project and you freely use it. <big>Contribute and make it better <big>
 
-all necessory module in requirements.txt
-install all mudule, run this commmand  - <b>' pip3 install -r requirements.txt'</b>
+## Set up Project
+
+Here's how to setup and run the project locally :
+
+### Prerequisites
+
+Here are some pre-requisites that you may require to run the project on your system.
+
+Prerequisites:
+
+- Python (https://www.python.org/)
+- OpenCV (https://docs.opencv.org) .
+- Tkinter (https://tkdocs.com/)
+- Pillow (https://pillow.readthedocs.io)
+### Install Project
+
+Done with the pre-requisites?
+
+Here are the steps to be taken after that :
+
+1. Fork this repository by clicking on the fork button on the top of this page. This will create a copy of this repository in your account. Then Clone the repository:
+
+```bash
+git clone https://github.com/[YOUR USERNAME]/DRS-Project.git
+```
+
+1. Change directory and install dependencies:
+
+```bash
+cd DRS-Project
+```
+```bash
+pip install -r requirements.txt
+```
+
+### WOW🤩, You did.
+
+## 🔗 Links
+[![portfolio](https://img.shields.io/badge/my_portfolio-000?style=for-the-badge&logo=ko-fi&logoColor=white)](http://shyanukant.herokuapp.com/)
+[![linkedin](https://img.shields.io/badge/linkedin-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/shyanukant)
+[![twitter](https://img.shields.io/badge/twitter-1DA1F2?style=for-the-badge&logo=twitter&logoColor=white)](https://twitter.com/shyanukant)
 
 
-<h1>Module Use</h1>
-<b>opencv(cv2)</b> and <b>pillow</b> for image processing 
-<b><Threading</b> for execute other code while waiting;  <i>out/not_out decision after pending</i></br>
-<b>partial</b> for input to a single object or need to bind one of the arguments to a function to be constant in command(tkinter button)
-<b>time</b> for delay decision for some time <i>(time.sleep(1.5)</i>
-  </br></br>
-  <big><i>Thank You</i></big>
+## Thanks❤🤗
+
